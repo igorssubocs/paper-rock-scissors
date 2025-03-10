@@ -1,0 +1,284 @@
+$primary-color: #39d5c5;
+$secondary-color: #2ec7ff;
+$accent-color: #00d0d7;
+$background-color: #f5f5f5;
+$text-color: #202020;
+$win-color: #218838;
+$lose-color: #ed3144;
+$draw-color: #ff8b2c;
+
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin choice-hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 20px rgba($primary-color, 0.7);
+}
+
+@mixin choice-active {
+  transform: scale(0.95);
+  box-shadow: 0 0 10px rgba($primary-color, 0.5);
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: $text-color;
+  line-height: 1.6;
+  background-image: url('./assets/background.png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+.game-container {
+  max-width: 50rem;
+  margin: 0 auto;
+  padding: 2rem;
+  background: white;
+  border-radius: 30px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  
+  @media (max-width: 768px) {
+    padding: 1rem;
+    margin-top: 1rem;
+  }
+}
+
+h1 {
+  text-align: center;
+  color: $primary-color;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 7.5rem;
+    height: 0.25rem;
+    background: linear-gradient(to right, $primary-color, $secondary-color);
+    border-radius: 2px;
+  }
+}
+
+h2 {
+  color: $secondary-color;
+  margin-bottom: 0.5rem;
+  font-size: 1.5rem;
+}
+
+.score-board {
+  @include flex-center;
+  gap: 6rem;
+  margin-bottom: 2rem;
+  
+  @media (max-width: 768px) {
+    gap: 2rem;
+  }
+  
+  .score {
+    text-align: center;
+    padding: 1rem;
+    border-radius: 12px;
+    background: linear-gradient(to bottom right, $primary-color, $secondary-color);
+    color: white;
+    width: 7.5rem;
+    
+    @media (max-width: 768px) {
+      width: 100px;
+    }
+    
+    .score-label {
+      font-weight: bold;
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    p:last-child {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+  }
+}
+
+.result {
+  text-align: center;
+  margin-bottom: 2rem;
+  
+  #result-text {
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding: 1rem;
+    border-radius: 12px;
+    background: $background-color;
+    display: inline-block;
+    min-width: 300px;
+    
+    @media (max-width: 768px) {
+      min-width: auto;
+      font-size: 1rem;
+    }
+    
+    &.win {
+      background-color: rgba($win-color, 0.2);
+      color: $win-color;
+    }
+    
+    &.lose {
+      background-color: rgba($lose-color, 0.2);
+      color: $lose-color;
+    }
+    
+    &.draw {
+      background-color: rgba($draw-color, 0.2);
+      color: $draw-color;
+    }
+  }
+}
+
+.choices {
+  @include flex-center;
+  gap: 2.5rem;
+  margin-bottom: 2rem;
+  
+  @media (max-width: 768px) {
+    gap: 1rem;
+  }
+  
+  .choice {
+    @include flex-center;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: white;
+    border: 0.25rem solid $primary-color;
+    cursor: pointer;
+    transition: all 0.5s ease;
+    
+    @media (max-width: 768px) {
+      width: 80px;
+      height: 80px;
+    }
+    
+    i {
+      font-size: 3rem;
+      color: $primary-color;
+      
+      @media (max-width: 768px) {
+        font-size: 2rem;
+      }
+    }
+    
+    &:hover {
+      @include choice-hover;
+    }
+    
+    &:active {
+      @include choice-active;
+    }
+    
+    &.selected {
+      background-color: rgba($primary-color, 0.1);
+      animation: pulse 1s infinite;
+    }
+    
+    &.computer-selected {
+      background-color: rgba($secondary-color, 0.1);
+      border-color: $secondary-color;
+      
+      i {
+        color: $secondary-color;
+      }
+    }
+  }
+}
+
+.game-history {
+  margin-bottom: 2rem;
+  
+  ul {
+    list-style: none;
+    max-height: 180px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 0.5rem;
+    
+    li {
+      padding: 0.5rem;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      animation: fadeIn 0.5s ease;
+      
+      &:last-child {
+        border-bottom: none;
+      }
+      
+      &.win {
+        background-color: rgba($win-color, 0.1);
+      }
+      
+      &.lose {
+        background-color: rgba($lose-color, 0.1);
+      }
+      
+      &.draw {
+        background-color: rgba($draw-color, 0.1);
+      }
+      
+      .round {
+        font-weight: bold;
+        margin-right: 1rem;
+      }
+    }
+  }
+}
+
+#reset-button {
+  display: block;
+  width: 100%;
+  padding: 1rem;
+  background: linear-gradient(to right, $primary-color, $accent-color);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: linear-gradient(to right, darken($primary-color, 10%), darken($accent-color, 10%));
+    transform: translateY(-2px);
+  }
+  
+  &:active {
+    transform: translateY(1px);
+  }
+}
